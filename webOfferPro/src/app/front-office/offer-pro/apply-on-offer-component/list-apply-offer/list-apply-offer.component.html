@@ -1,0 +1,107 @@
+<div role="dialog" tabindex="-1" class="modal" [class]="state ? 'show' : 'fade'" style="display: block;">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-info-circle icon-header"></i>
+                <h4 class="modal-title">List Applys on offer</h4>
+                <button (click) ="onClickNo()"  class="close" type="button" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body modal-body-custome">
+
+
+
+                <div class="col">
+                    <div class="row">
+                       <div class="col-sm-12">
+                          <div class="iq-card">
+                             <div class="iq-card-body">
+                                <div class="d-flex justify-content-between">
+                                    <form >
+                                        <div class="d-flex flex-row" >
+                                            <input (keyup)="onSearched(searchlistAccount.value)" #searchlistAccount type="text" class="form-control todo-search" id="exampleInputEmail001" placeholder="Search">
+                                            <i class="ri-search-line my-auto" style="margin-left: -20px;"></i>
+                                        </div>
+                                     </form>
+                                   <div class="d-flex flex-row">
+                                    <button class="btn btn-primary ml-3" (click)="onClickStatusApply('All')">All</button>
+                                      <button class="btn btn-success ml-3"(click)="onClickStatusApply('ACCEPT')">ACCEPT</button>
+                                      <button class="btn btn-warning ml-3 text-black"(click)="onClickStatusApply('ONHOLD')">ONHOLD</button>
+                                      <button class="btn btn-danger ml-3"(click)="onClickStatusApply('REFUSE')">REFUSE</button>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+
+
+
+                <div class="col-12">
+                    <div class="iq-card">
+                <div class="iq-card-body p-0">
+                <ul class="todo-task-lists m-0 p-0">
+                    <li *ngFor="let applyOnOffer of listApplyOnOffersFilter | slice:(currentPageStatusApply - 1) * pageSizeStatusApply:currentPageStatusApply * pageSizeStatusApply" class="d-flex align-items-center p-3" >
+                       <div  *ngIf="applyOnOffer.accountDto !== undefined" class="user-img img-fluid">
+                        <img [src]="accountService.getLastPhotoProfile( applyOnOffer.accountDto.attachementsDto , accountService.category_photoprofile)" alt="story-img" class="rounded-circle avatar-40">
+                     </div>
+                       <div  *ngIf="applyOnOffer.accountDto !== undefined" class="media-support-info ml-3">
+                          <h6 class="d-inline-block">{{applyOnOffer.accountDto.firstname}} {{applyOnOffer.accountDto.lastname}}</h6>
+                          <span *ngIf="applyOnOffer.statutApply === applyonofferService.ACCEPT" class="badge badge-success ml-3">ACCEPT</span>
+                          <span *ngIf="applyOnOffer.statutApply === applyonofferService.ONHOLD"  class="badge badge-warning ml-3 text-white">ON HOLD</span>
+                          <span *ngIf="applyOnOffer.statutApply === applyonofferService.REFUSE" class="badge badge-danger ml-3">REFUSE</span>
+                          <div class="ml-2">
+                              <p class="mb-0"><i class="fa fa-clock-o mr-1 text-primary"></i> {{ this.recruitmentService.formatDateAgo(  this.recruitmentService.toDate (applyOnOffer.applyAt.toString()))   }}</p>
+                          </div>
+                       </div>
+                       <div  *ngIf="applyOnOffer.accountDto !== undefined" class="iq-card-header-toolbar d-flex align-items-center">
+                           <div class="form-group">
+                             <select  class="form-control" id="apply-offer-current-statut-apply-input"
+                                     name="apply-offer-current-statut-apply"
+                                     (change)="onStatusApplyChange(applyOnOffer  ,$event)"
+                                     > 
+                              <optgroup label="Status Apply"> 
+                                 <option *ngFor="let optionStatusApply of applyonofferService.listStatusApply" [value]="optionStatusApply.value"
+                                          [selected]="optionStatusApply?.value === applyOnOffer.statutApply">{{ optionStatusApply.label }}</option> 
+                             </optgroup>
+                           </select>
+                        </div>
+                       </div>
+                    </li>
+                 </ul>
+                </div>
+            </div>
+            </div>
+
+
+
+            <div class="col-12">
+               <div class="pagination">
+                  <button class="btn btn-outline-primary" (click)="currentPageStatusApply = currentPageStatusApply - 1" 
+                  [disabled]="currentPageStatusApply === 1"><i class="fa fa-angle-left"></i>Previous</button>
+
+                  <span class="page-number mx-3 my-auto text-primary">{{ currentPageStatusApply }}&nbsp;<i class="fa fa-level-up"></i></span>
+                  <button class="btn btn-outline-primary" (click)="currentPageStatusApply = currentPageStatusApply + 1"
+                   [disabled]="currentPageStatusApply * pageSizeStatusApply >=  this.listApplyOnOffersFilter.length">Next&nbsp;<i class="fa fa-angle-right"></i></button>
+                </div>
+            </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button (click) ="onClickNo()" class="btn btn-primary" type="button" data-dismiss="modal" >close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<app-message-box-confirmation-standart *ngIf="this.stateMsgBoxConfimStatusApply" 
+[state]="this.stateMsgBoxConfimStatusApply"
+title="Message" text="Do you want to change you Status Apply ?"
+(onClickEvent)="onClickEventMsgConfimStatusApply($event)" >
+</app-message-box-confirmation-standart>
+<app-message-box-response *ngIf="this.stateMsgBoxAuth" 
+[state]="this.stateMsgBoxAuth"
+[msgReponse]="this.applyonofferService.msgReponseStatusDto"
+(onCloseEvent)="closeEventstateMsgBoxAuth($event)" ></app-message-box-response> 

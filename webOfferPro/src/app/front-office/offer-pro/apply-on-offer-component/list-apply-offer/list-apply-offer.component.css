@@ -1,0 +1,9 @@
+.icon-header {
+    font-size: 35px;
+    margin-right: 5px;
+    color:#50B5FF;
+  }
+  .modal-body-custome{
+    max-height: 400px;
+    /*overflow-y: auto;*/
+  }
